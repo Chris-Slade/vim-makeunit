@@ -11,6 +11,10 @@ set cpo&vim
 
 " Import statements to be placed in the file
 let g:makeunit_imports = [ 'org.junit.Test' ]
+" Static imports
+let g:makeunit_static_imports = [ 'org.junit.assertTrue' ]
+" Use Allman brace style (default: no)
+let g:makeunit_use_allman_style = 0
 
 command! MakeUnit call makeunit#CreateUnitTest()
 

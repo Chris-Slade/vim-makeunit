@@ -21,35 +21,112 @@ function! makeunit#CreateUnitTest()
         call mkdir(testdir, 'p')
     endif
 
-    " Get package and method names before changing buffers
+    " Create the code template
     let package = makeunit#GetPackage()
     let methods = makeunit#GetPublicMethods()
+    let tb = makeunit#NewTemplateBuilder(classname, g:makeunit_use_allman_style)
+    if !empty(package)
+        call tb.set_package(package)
+    endif
+    for import in g:makeunit_imports
+        call tb.add_import(import)
+    endfor
+    for import in g:makeunit_static_imports
+        call tb.add_static_import(import)
+    endfor
+    for method in methods
+        call tb.add_stub(method)
+    endfor
 
     " Open unit-test file
     exec 'edit ' . fnameescape(testfile)
-    
-    " Create the code template
-    if !empty(package)
-        call setline(1, 'package ' . package . ';')
-        call append(line('$'), '')
+    " Make sure opening the file succeeded
+    if expand('%') ==# testfile
+        call setline(1, tb.to_lines())
+        " Indent buffer and show current file
+        silent normal! gg=G
     endif
+endfunction
 
-    for import in g:makeunit_imports
-        call append(line('$'), 'import ' . import . ';')
-    endfor
-    call append(line('$'), '')
-    
-    call append(line('$'), [ printf('public class %sTest {', classname), '' ]) 
+function! makeunit#NewTemplateBuilder(class, use_allman_style)
+    if empty(a:class)
+        echoerr 'Class must be provided'
+        return
+    endif
+    let tb = { 'class' : a:class, 'package' : '', 'imports' : [],
+\       'static_imports' : [], 'methods' : [], 'allman' : a:use_allman_style }
 
-    for method in methods
-        let method = substitute(method, '.*', '\u\0', '')
-        call append(
-\           line('$'), 
-\           [ "\t@Test", printf("\tpublic void test%s () {", method), "\t}", '' ]
-\       )
-    endfor
+    function tb.set_package(package)
+        let self.package = a:package
+    endfunction
 
-    call append(line('$'), '}')
+    function tb.add_import(import)
+        call add(self.imports, a:import)
+    endfunction
+
+    function tb.add_static_import(import)
+        call add(self.static_imports, a:import)
+    endfunction
+
+    function tb.add_stub(method)
+        call add(self.methods, a:method)
+    endfunction
+
+    function tb._add_line(line)
+        call add(self._lines, a:line)
+    endfunction
+
+    function tb._add_brace_line(line)
+        if self.allman
+            call self._add_line(a:line)
+            call self._add_line('{')
+        else
+            call self._add_line(a:line . ' {')
+        endif
+    endfunction
+
+    function tb._add_space()
+        if !empty(self._lines) && !empty(self._lines[-1])
+            call add(self._lines, '')
+        endif
+    endfunction
+
+    function tb.to_lines()
+        let self._lines = []
+
+        if !empty(self.package)
+            call self._add_line(printf('package %s;', self.package))
+            call self._add_space()
+        endif
+
+        for import in self.imports
+            call self._add_line(printf('import %s;', import))
+        endfor
+        call self._add_space()
+
+        for import in self.static_imports
+            call self._add_line(printf('import static %s;', import))
+        endfor
+        call self._add_space()
+
+        call self._add_brace_line(printf('public class %sTest', self.class))
+        call self._add_space()
+
+        for method in self.methods
+            " fooBar => testFooBar
+            let method = 'test' . substitute(method, '.*', '\u\0', '')
+            call self._add_line('@Test')
+            call self._add_brace_line(printf('public void %s()', method))
+            call self._add_line('}')
+            call self._add_space()
+        endfor
+
+        call self._add_line('}')
+
+        return self._lines
+    endfunction
+
+    return tb
 endfunction
 
 function! makeunit#FindAndMatch(searchpat, matchpat)
@@ -82,3 +159,5 @@ function! makeunit#GetPublicMethods()
     endfor
     return methods
 endfunction
+
+" vim: set foldmarker=function,endfunction foldmethod=marker foldlevel=0:
