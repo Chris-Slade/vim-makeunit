@@ -39,12 +39,11 @@ For example, with the following directory structure
                         `-- app
                             `-- AppTest.java
 
-See the included help for more information. (TODO)
+See the included help for more information.
 
 # Missing features
 
 Issues and missing features that I might fix should I find the need to do so.
 
-* Needs help documentation
 * The logic for choosing where to place the test is extremely simple
 * Assumption of JUnit `@Test`
