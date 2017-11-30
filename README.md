@@ -45,5 +45,8 @@ See the included help for more information.
 
 Issues and missing features that I might fix should I find the need to do so.
 
-* The logic for choosing where to place the test is extremely simple
+* The logic for choosing where to place the test is extremely simple and not
+configurable
+* Method stubs are created in the order of the public methods in the source
+file, and there's no option to sort them differently
 * Assumption of JUnit `@Test`

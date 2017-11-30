@@ -18,6 +18,48 @@ Likewise, for each public method "foo" in the source file, a corresponding
 
 stub method will be created.
 
+In a project with a Maven-style layout (source code in a "src/" directory,
+and production and test code divided between subdirectories of "src/main/" and
+"src/test/", respectively), the path of the new unit-test file will be the
+path of the current file, but with "src/main" replaced with "src/test".
+
+If the project does not have a Maven-style layout, the unit test will be
+opened in the same directory as the source file it is testing.
+
+Unit-test files are opened with the same name as the source file, but with
+"Test" appended. The files are not written --- just a buffer is created. This
+allows you to change the name or location of the generated file by using the
+":saveas" command instead of ":write".
+
+If a conflicting file already exists, a warning is issued and the existing file
+is opened instead.
+
+EXAMPLES                                        *makeunit-examples*
+
+The following examples might help to explain the purpose and workings of this
+plug-in better.
+
+Executing the commands >
+
+    :edit src/main/com/example/myapp/controller/AccountController.java
+    :MakeUnit
+
+will open a new buffer (as if opened with ":edit" --- make
+sure you write any unsaved changes, or set 'confirm', or set
+your buffers to automatically write changes) with the path
+"src/main/com/example/myapp/controller/AccountControllerTest.java". The file
+will then be populated with a template consisting of a package statement,
+imports (see |makeunit-settings|), a top-level test class, and annotated stub
+methods for each public method in "AccountController.java".
+
+In a project with a different layout (e.g. a single "src/" directory
+containing all source files), the commands >
+
+    :edit src/Utils.java
+    :MakeUnit
+
+will open a buffer with the path "src/UtilsTest.java".
+
 SETTINGS                                        *makeunit-settings*
                                                 *makeunit-config*
 
