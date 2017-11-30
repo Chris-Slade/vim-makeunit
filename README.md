@@ -46,8 +46,5 @@ See the included help for more information. (TODO)
 Issues and missing features that I might fix should I find the need to do so.
 
 * Needs help documentation
-* Not tested thoroughly
 * The logic for choosing where to place the test is extremely simple
-* Not many options for choosing how to generate the template code
-* The code is ugly
-* Assumption of JUnit
+* Assumption of JUnit `@Test`
