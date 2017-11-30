@@ -1,7 +1,10 @@
 function! makeunit#CreateUnitTest()
     " Construct the appropriate path and filename for the unit test
     let filepath = simplify(expand('%'))
-    let testdir = substitute(fnamemodify(filepath, ':h'), 'src/main', 'src/test', '')
+    let testdir = fnamemodify(filepath, ':h')
+    if strridx(testdir, 'src/main') > -1
+        let testdir = substitute(testdir, ':h'), 'src/main', 'src/test', '')
+    endif
     let classname = makeunit#GetClassName()
     if empty(classname)
         echoerr 'Could not determine class name'
