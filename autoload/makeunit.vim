@@ -42,7 +42,7 @@ function! makeunit#CreateUnitTest()
     endfor
 
     " Open unit-test file
-    exec 'edit ' . fnameescape(testfile)
+    exec 'confirm edit ' . fnameescape(testfile)
     " Make sure opening the file succeeded
     if expand('%') ==# testfile
         call setline(1, tb.to_lines())
