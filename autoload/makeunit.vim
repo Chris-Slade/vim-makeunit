@@ -3,7 +3,7 @@ function! makeunit#CreateUnitTest()
     let filepath = simplify(expand('%'))
     let testdir = fnamemodify(filepath, ':h')
     if strridx(testdir, 'src/main') > -1
-        let testdir = substitute(testdir, ':h'), 'src/main', 'src/test', '')
+        let testdir = substitute(testdir, 'src/main', 'src/test', '')
     endif
     let classname = makeunit#GetClassName()
     if empty(classname)
