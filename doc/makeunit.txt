@@ -10,7 +10,7 @@ INTRODUCTION                                    *makeunit-intro* *:MakeUnit*
 This plugin provides a command, *:MakeUnit*, which scans the current file
 (expected to be a Java source file) and creates a unit-test file. If the file
 has a package declaration, that package will be used in the unit-test file.
-Likewise, for each public method "foo" in the source file, a corresponding  
+Likewise, for each public method "foo" in the source file, a corresponding
 
     @Test
     public void testFoo() {
@@ -66,7 +66,7 @@ SETTINGS                                        *makeunit-settings*
                                                 *g:makeunit_imports*
 g:makeunit_imports
     A list of imports to be placed in the generated file. The default is
-[ 'org.junit.Test' ], which results in  
+[ 'org.junit.Test' ], which results in
 
     import org.junit.Test;
 
@@ -77,21 +77,21 @@ package statement, if present.
 g:makeunit_static_imports
     A list of static imports to be placed in the generated file. Static imports
 are placed after any non-static imports, but before the class declaration. The
-default is [ 'org.junit.assertTrue' ], which produces  
+default is [ 'org.junit.assertTrue' ], which produces
 
     import static org.junit.assertTrue;
 
                                                 *g:makeunit_use_allman_style*
 g:makeunit_use_allman_style
     When set to a true value, opening braces ("{") will be placed on the line
-following the statement which requires them, e.g.  
+following the statement which requires them, e.g.
 
     public class MyTest
     {
         ...
     }
 
-When set to a false value, K&R/Linux-style braces will be used, e.g.  
+When set to a false value, K&R/Linux-style braces will be used, e.g.
 
     public class MyTest {
         ...
